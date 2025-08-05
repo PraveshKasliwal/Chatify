@@ -24,3 +24,7 @@ Thumbs.db
 # Cache
 .cache/
 *.tmp
+
+frontend/.vscode/
+backend/.vscode/
+.vscode/
