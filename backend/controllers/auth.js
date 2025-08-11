@@ -30,7 +30,7 @@ exports.verifyOtp = async (req, res) => {
     const user = await User.findOne({ number });
     const isNewUser = !user;
 
-    const token = jwt.sign({ number }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ number }, process.env.APP_JWT_SECRET, { expiresIn: "7d" });
 
     res.json({ message: "OTP verified successfully", token, isNewUser, user: user });
 };

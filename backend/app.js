@@ -67,7 +67,7 @@ app.use("/user", profileRoutes);
 app.use("/chat", chatRoutes);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.APP_MONGO_URI)
     .then(result => {
         console.log("Connected to db");
         server.listen(5000, () => {

@@ -335,7 +335,7 @@ exports.deleteChat = async (req, res) => {
 
 
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.APP_GEMINI_API_KEY);
 
 exports.summarizeMessages = async (req, res) => {
     const { messages } = req.body;
