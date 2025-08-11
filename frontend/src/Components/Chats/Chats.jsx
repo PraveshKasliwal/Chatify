@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 import NewChatModal from '../../Pages/AddChat/NewChatModel';
 
-const socket = io("http://localhost:5000");
+const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
 
 const Chats = ({ openProfile, setOpenProfile }) => {
     const [chats, setChats] = useState([]);
@@ -54,7 +54,7 @@ const Chats = ({ openProfile, setOpenProfile }) => {
     useEffect(() => {
         const fetchChats = async () => {
             try {
-                const res = await axios.get(`http://localhost:5000/chat/user-chats/${userId}`);
+                const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/chat/user-chats/${userId}`);
                 setChats(sortChats(res.data));
                 setOpenProfile(null);
             } catch (err) {

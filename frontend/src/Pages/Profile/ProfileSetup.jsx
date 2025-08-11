@@ -29,7 +29,7 @@ const ProfileSetup = ({ number }) => {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:5000/user/save-profile", {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/user/save-profile`, {
                 number,
                 name,
                 base64Image

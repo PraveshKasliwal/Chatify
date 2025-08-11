@@ -8,7 +8,7 @@ const ChatDetail = ({ id, profilePhoto, userName, recentMsg, openProfile, setOpe
     const userId = localStorage.getItem("userId");
     const handleDeleteChat = async () => {
         try {
-            await axios.delete(`http://localhost:5000/chat/delete-chat/${userObj.chatId}/${userId}`);
+            await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chat/delete-chat/${userObj.chatId}/${userId}`);
             setOpenProfile(null);
             setChatOptions(false);
         } catch (err) {

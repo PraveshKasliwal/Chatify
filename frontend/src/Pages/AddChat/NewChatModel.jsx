@@ -17,7 +17,7 @@ const NewChatModal = ({ closeModal }) => {
         const fetchUsers = async () => {
             try {
                 const loggedInUserId = localStorage.getItem("userId");
-                const res = await axios.get(`http://localhost:5000/chat/users/all`);
+                const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/chat/users/all`);
                 // Exclude self
                 const otherUsers = res.data.filter(user => user._id !== loggedInUserId);
                 setUsers(otherUsers);
@@ -61,7 +61,7 @@ const NewChatModal = ({ closeModal }) => {
                 profileImage: base64Image,
             };
 
-            const res = await axios.post("http://localhost:5000/chat/create", payload);
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat/create`, payload);
             // onCreateChat(res.data.chat);
             closeModal();
         } catch (err) {

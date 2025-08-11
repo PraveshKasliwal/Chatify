@@ -8,7 +8,7 @@ import ChatsSummary from "./ChatsSummary";
 import "../../index.css";
 
 import { io } from "socket.io-client";
-const socket = io("http://localhost:5000");
+const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:5000");
 
 const ChatArea = ({
     openProfile,
@@ -80,7 +80,7 @@ const ChatArea = ({
 
     const fetchMessages = async (chatId) => {
         try {
-            const response = await fetch(`http://localhost:5000/chat/get-messages/${chatId}`);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/chat/get-messages/${chatId}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch messages");
             }
@@ -121,7 +121,7 @@ const ChatArea = ({
         };
 
         try {
-            const res = await axios.post("http://localhost:5000/chat/send-message", msgObj);
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat/send-message`, msgObj);
 
             // socket is sending message from backend
             socket.emit("send-message", res.data);
@@ -140,7 +140,7 @@ const ChatArea = ({
             formData.append("senderId", userId);
 
             const res = await axios.post(
-                "http://localhost:5000/chat/upload-image",
+                `${process.env.REACT_APP_BACKEND_URL}/chat/upload-image`,
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
@@ -156,7 +156,7 @@ const ChatArea = ({
 
         try {
             const messageIds = selectedMessages.map(m => m._id);
-            await axios.delete(`http://localhost:5000/chat/delete-messages/${openProfile.chatId}`, {
+            await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/chat/delete-messages/${openProfile.chatId}`, {
                 data: { messageIds }
             });
 

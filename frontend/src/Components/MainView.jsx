@@ -33,7 +33,7 @@ const MainView = () => {
         // console.log("Messages: ", orderedMessages);
 
         try {
-            const response = await axios.post('http://localhost:5000/chat/summarize', {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/chat/summarize`, {
                 messages: orderedMessages,
             });
 

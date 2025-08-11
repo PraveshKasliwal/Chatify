@@ -65,15 +65,6 @@ app.use("/chat", chatRoutes);
 mongoose.connect(process.env.MONGO_URI)
     .then(result => {
         console.log("Connected to db");
-        // const User = require("./models/User");
-        // User.updateMany({}, { $set: { chats: [] } })
-        //     .then(() => {
-        //         console.log("Cleared chats array for all users");
-        //     })
-        //     .catch((err) => {
-        //         console.error("Error clearing chats array:", err);
-        //     });
-
         server.listen(5000, () => {
             console.log("Server started on port 5000");
         });

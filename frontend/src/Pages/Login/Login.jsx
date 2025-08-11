@@ -11,7 +11,7 @@ const Login = ({ setNumber }) => {
     const sendOtp = async () => {
         try {
             localStorage.clear();
-            const response = await axios.post("http://localhost:5000/auth/send-otp", { number: phoneNumber });
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/send-otp`, { number: phoneNumber });
             alert(response.data.message);
             setNumber(phoneNumber);
             navigate("/otp", { state: { otp: response.data.otp } });
