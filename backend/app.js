@@ -25,8 +25,7 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
 const allowedOrigins = [
-    "http://localhost:3000",
-    "https://chatify-frontend-orpin-ten.vercel.app"
+    process.env.FRONTEND_DEPLOYED_URL,    
 ];
 
 const io = new Server(server, {

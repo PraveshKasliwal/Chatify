@@ -28,8 +28,6 @@ const Chats = ({ openProfile, setOpenProfile }) => {
         if (userId) {
             socket.emit("join", userId); // ✅ Ensures user joins their own room
         }
-        console.log('socket url:', process.env.REACT_APP_BACKEND_URL);
-        console.log('Socket connected:', socket);
 
         // Listen for deleted chat
         socket.on("chat-deleted", ({ chatId }) => {
