@@ -24,8 +24,11 @@ app.use(bodyParser.json());
 app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ extended: true, limit: "20mb" }));
 
+// const allowedOrigins = [
+//     process.env.FRONTEND_DEPLOYED_URL,    
+// ];
 const allowedOrigins = [
-    process.env.FRONTEND_DEPLOYED_URL,    
+    "http://localhost:3000",    
 ];
 
 const io = new Server(server, {

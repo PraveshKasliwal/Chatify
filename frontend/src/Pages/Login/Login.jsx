@@ -4,20 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 import './Login.css'
 
-const Login = ({ setNumber }) => {
-    const [phoneNumber, setPhoneNumber] = useState("");
+const Login = ({ phoneNumber, setPhoneNumber }) => {
     const navigate = useNavigate();
 
     const sendOtp = async () => {
         try {
-            localStorage.clear();
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/send-otp`, { number: phoneNumber });
-            alert(response.data.message);
-            setNumber(phoneNumber);
-            navigate("/otp", { state: { otp: response.data.otp } });
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/send-otp`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ phone: `+91${phoneNumber}` })
+            });
+
+            const data = await response.json();
+            console.log(data);
+            if (data.success) {
+                alert("OTP sent successfully!");
+                navigate("/otp");
+            } else {
+                alert(data.message);
+            }
         } catch (error) {
-            console.log(error);
-            alert("Error sending OTP. Try again.");
+            console.error("Error sending OTP", error);
         }
     };
 

@@ -7,7 +7,7 @@ import { io } from "socket.io-client";
 
 import NewChatModal from '../../Pages/AddChat/NewChatModel';
 
-const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000');
+const socket = io(process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000');
 
 const Chats = ({ openProfile, setOpenProfile }) => {
     const [chats, setChats] = useState([]);

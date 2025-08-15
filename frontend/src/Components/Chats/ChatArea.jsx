@@ -8,7 +8,7 @@ import ChatsSummary from "./ChatsSummary";
 import "../../index.css";
 
 import { io } from "socket.io-client";
-const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:5000");
+const socket = io(process.env.REACT_APP_BACKEND_URL || "http://localhost:3000");
 
 const ChatArea = ({
     openProfile,

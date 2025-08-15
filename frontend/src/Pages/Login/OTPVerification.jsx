@@ -4,37 +4,40 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import './Login.css'
 
-const OTPVerification = ({ number, setIsAuthenticated }) => {
+const OTPVerification = ({ phoneNumber, setIsAuthenticated }) => {
     const [enteredOtp, setEnteredOtp] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
     const otp = location.state?.otp;
 
     const verifyOtp = async () => {
-        if (!number || !enteredOtp) {
+        if (!enteredOtp) {
             alert("Please enter the OTP.");
             return;
         }
+        console.log(`Verifying OTP: ${enteredOtp} for phone: ${phoneNumber}`);
         try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/auth/verify-otp`, {
-                number,
-                otp,
-                enteredOtp
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/verify-otp`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ phone: `+91${phoneNumber}`, otp: enteredOtp })
             });
 
-            alert(response.data.message);
-            localStorage.setItem("token", response.data.token);
+            const resp = await response.json();
+            alert(resp.message);
+            localStorage.setItem("token", resp.token);
             setIsAuthenticated(true);
-            if (response.data.isNewUser) {
+            if (resp.isNewUser) {
                 navigate("/profile");
             } else {
-                // console.log(`response: ${JSON.stringify(response.data)}`);
-                localStorage.setItem('userId', response.data.user._id);
+                // console.log(`resp: ${JSON.stringify(resp.data)}`);
+                localStorage.setItem('userId', resp.user._id);
                 navigate("/main");
             }
         } catch (error) {
-            console.error("OTP Verification Error:", error);
-            alert(error.response?.data?.message || "OTP verification failed. Try again.");
+            console.error("Error verifying OTP", error);
         }
     };
 

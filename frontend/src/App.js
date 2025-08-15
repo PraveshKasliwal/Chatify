@@ -12,6 +12,7 @@ function App() {
   const [number, setNumber] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const navigate = useNavigate();
 
   const isTokenExpired = (token) => {
@@ -40,9 +41,9 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login setNumber={setNumber} />} />
-        <Route path="/otp" element={<OTPVerification number={number} setIsAuthenticated={setIsAuthenticated} />} />
-        <Route path="/profile" element={<ProfileSetup number={number} />} />
+        <Route path="/" element={<Login phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />} />
+        <Route path="/otp" element={<OTPVerification phoneNumber={phoneNumber} setIsAuthenticated={setIsAuthenticated} />} />
+        <Route path="/profile" element={<ProfileSetup number={phoneNumber} />} />
         <Route path="/main" element={<MainView />} />
       </Routes>
 
