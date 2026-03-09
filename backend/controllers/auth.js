@@ -2,13 +2,13 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const OTP = require("../models/OTP"); // adjust path
 const User = require("../models/User");
-const Vonage = require('@vonage/server-sdk');
+// const Vonage = require('@vonage/server-sdk');
 
 // Initialize Vonage
-const vonage = new Vonage({
-    apiKey: process.env.VONAGE_API_KEY,
-    apiSecret: process.env.VONAGE_API_SECRET
-});
+// const vonage = new Vonage({
+//     apiKey: process.env.VONAGE_API_KEY,
+//     apiSecret: process.env.VONAGE_API_SECRET
+// });
 
 exports.sentOtp = async (req, res) => {
     const { phone } = req.body;
@@ -40,12 +40,15 @@ exports.verifyOtp = async (req, res) => {
         await OTP.deleteOne({ _id: record._id });
 
         phone = phone.replace(/^\+?91/, "");
-        console.log("Verifying OTP for phone:", phone);
         const user = await User.findOne({ number: phone });
         const isNewUser = !user;
         const token = jwt.sign({ phone }, process.env.APP_JWT_SECRET, { expiresIn: "7d" });
-        console.log(`user: ${user}, isNewUser: ${isNewUser}, token: ${token}`); 
-        res.json({ message: "OTP verified successfully", token, isNewUser, user: user });
+        res.json({
+            message: "OTP verified successfully",
+            token,
+            isNewUser,
+            user: user || null  // null for new users — frontend must handle this
+        });
     } catch (error) {
         console.error("Error verifying OTP:", error);
         res.status(500).json({ error: "Server error" });

@@ -110,10 +110,20 @@ exports.getUserChats = async (req, res) => {
     try {
         const user = await User.findById(userId).populate({
             path: "chats",
-            populate: {
-                path: "members",
-                select: "username profileImage",
-            },
+            populate: [
+                {
+                    path: "members",
+                    select: "username profileImage",
+                },
+                {
+                    path: "messages",
+                    select: "text type createdAt senderId",
+                    populate: {
+                        path: "senderId",
+                        select: "username",
+                    },
+                }
+            ],
         });
 
         if (!user) {
@@ -123,12 +133,24 @@ exports.getUserChats = async (req, res) => {
         // Format chats
         const formattedChats = user.chats.map(chat => {
             const isGroup = chat.type === "group";
+
+            // Last message is the last item in the messages array
+            const lastMsg = chat.messages?.length > 0
+                ? chat.messages[chat.messages.length - 1]
+                : null;
+
             return {
                 _id: chat._id,
                 type: chat.type,
                 members: chat.members,
                 groupName: isGroup ? chat.groupName : null,
                 profileImage: chat.profileImage || null,
+                lastMessage: lastMsg ? {
+                    text: lastMsg.type === 'image' ? '📷 Image' : lastMsg.text,
+                    type: lastMsg.type,
+                    createdAt: lastMsg.createdAt,
+                    senderUsername: lastMsg.senderId?.username || '',
+                } : null,
             };
         });
 
@@ -196,15 +218,22 @@ exports.postMessages = async (req, res) => {
         }
 
         const io = req.app.get("io");
-        //for real time 
+        const messagePayload = {
+            ...newMessage._doc,
+            senderUsername: senderUsername,
+            chatId: chatId,
+            senderId: senderId
+        };
+
+        // Emit to ALL members including sender — for sidebar last message update
+        // ChatArea deduplicates by adding sender's message directly from API response
         updatedChat.members.forEach(member => {
             if (member._id.toString() !== senderId) {
-                io.to(member._id.toString()).emit("new-message", {
-                    ...newMessage._doc,
-                    senderUsername: senderUsername,
-                    chatId: chatId,
-                    senderId: senderId
-                });
+                // Other members get full new-message for chat area + sidebar
+                io.to(member._id.toString()).emit("new-message", messagePayload);
+            } else {
+                // Sender gets sidebar-update only (chat area already added it directly)
+                io.to(member._id.toString()).emit("sidebar-update", messagePayload);
             }
         });
 

@@ -51,11 +51,6 @@ io.on("connection", (socket) => {
         // console.log(`Socket ${socket.id} joined chat ${chatId}`);
     });
 
-    socket.on("send-message", (message) => {
-        // console.log("Message received on server:", message);
-        io.to(message.chatId).emit("new-message", message);
-    });
-
     socket.on("disconnect", () => {
         console.log("User disconnected:", socket.id);
     });
