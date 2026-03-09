@@ -2,31 +2,55 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const OTP = require("../models/OTP"); // adjust path
 const User = require("../models/User");
-// const Vonage = require('@vonage/server-sdk');
+const { Vonage } = require('@vonage/server-sdk');
 
 // Initialize Vonage
-// const vonage = new Vonage({
-//     apiKey: process.env.VONAGE_API_KEY,
-//     apiSecret: process.env.VONAGE_API_SECRET
-// });
+const vonage = new Vonage({
+    apiKey: process.env.VONAGE_API_KEY,
+    apiSecret: process.env.VONAGE_API_SECRET
+});
 
 exports.sentOtp = async (req, res) => {
     const { phone } = req.body;
 
-    // Generate 6-digit OTP
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    try {
+        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save OTP in MongoDB
-    await OTP.create({ phone, otp: otpCode });
-    console.log(`OTP for ${phone}: ${otpCode}`);
-    res.json({ message: "OTP sent successfully", success: true });
-    // Send OTP via SMS
-    // vonage.message.sendSms("VonageAPI", phone, `Your OTP is: ${otpCode}`, (err, responseData) => {
-    //     if (err) {
-    //         return res.status(500).json({ error: "Failed to send OTP" });
-    //     }
-    //     res.json({ message: "OTP sent successfully", success: true });
-    // });
+        // Save OTP with full phone (e.g. +919876543210)
+        await OTP.create({ phone, otp: otpCode });
+        console.log(`OTP for ${phone}: ${otpCode}`);
+
+        // Strip any existing +91 or 91 prefix, then add 91 (no +)
+        // Vonage expects format: 919876543210 (no + sign)
+        const cleanNumber = phone.replace(/^\+/, ''); // converts +919876543210 → 919876543210
+        console.log('Sending OTP to:', cleanNumber);
+
+        const response = await vonage.sms.send({
+            to: cleanNumber,
+            from: "Chatify",
+            text: `Your Chatify OTP is: ${otpCode}. Valid for 5 minutes.`
+        });
+
+        console.log('Vonage response:', response);
+
+        // Check if message was accepted
+        const messageStatus = response?.messages?.[0]?.status;
+        if (messageStatus !== '0') {
+            console.error('Vonage error status:', messageStatus);
+            return res.status(500).json({ error: "Failed to send OTP via SMS" });
+        }
+
+        res.json({ message: "OTP sent successfully", success: true });
+
+    } catch (error) {
+        const failedMsg = error?.response?.messages?.[0];
+        console.error('Vonage error detail:', {
+            status: failedMsg?.status,
+            errorText: failedMsg?.['error-text'],
+            to: failedMsg?.to,
+        });
+        res.status(500).json({ error: "Server error" });
+    }
 };
 
 exports.verifyOtp = async (req, res) => {
