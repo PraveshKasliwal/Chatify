@@ -1,0 +1,148 @@
+.login-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-primary);
+}
+
+.login-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.login-icon {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.country-select-wrapper {
+  width: 100%;
+}
+
+.country-select {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.country-select:hover {
+  border-color: var(--accent);
+}
+
+.country-select:focus {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.phone-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+}
+
+/* .phone-input-wrapper:focus-within {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+} */
+
+.country-code {
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.phone-input {
+  flex: 1;
+  background: none;
+  color: var(--text-primary);
+  font-size: 15px;
+  border: none;
+  outline: none;
+}
+
+.phone-input::placeholder {
+  color: var(--text-muted);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: 8px;
+}
+
+.send-otp-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.send-otp-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+.send-otp-btn:disabled:hover {
+  transform: none;
+  filter: none;
+}
+
+@media (max-width: 768px) {
+  .login-card {
+    margin: 20px;
+    padding: 36px 28px;
+  }
+}
